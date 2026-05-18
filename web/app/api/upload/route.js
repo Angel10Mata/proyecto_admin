@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '../../../utils/supabase/server';
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
+import * as xlsx from 'xlsx';
 
 export async function POST(request) {
   try {
@@ -64,24 +66,40 @@ export async function POST(request) {
 }
 
 async function simulateETLProcessing(file, auditId, userId) {
-  // Inicializamos un cliente de Supabase usando el Service Role Key (o podemos saltarnos RLS si es interno, pero para simplificar usamos un nuevo serverClient que tenga sesión si es necesario, sin embargo since it's background, standard fetch might not have cookies context easily inside a timeout if Next.js drops it.
-  // Instead, we will do the update using an admin client, or just do a direct call using NEXT_PUBLIC_SUPABASE_URL and Service Role if available. But the user doesn't have a service role yet.
-  // Actually, we can just use the user client since we are still in the Node environment. Wait, background tasks in Next.js API Routes (serverless) can be killed once the response is sent. 
-  // Next.js now provides `waitUntil` for background tasks, but standard Promises usually work in development.
-  
   try {
-    const supabase = await createClient(); // this will use cookies from the initial request if still alive
+    // Inicializamos un cliente de Supabase con Service Role Key para actualizar en segundo plano sin depender de cookies()
+    const supabaseAdmin = createSupabaseClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_ROLE_KEY,
+      {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false
+        }
+      }
+    );
     
-    // Simular el parseo del CSV
-    const text = await file.text();
-    const lines = text.split('\n').filter(l => l.trim() !== '');
-    const numRegistros = Math.max(0, lines.length - 1); // asumiendo 1 linea de header
+    let numRegistros = 0;
     
-    // Simular espera de 2 segundos (lo que hacía Python)
+    // Procesar según el tipo de archivo
+    if (file.name.endsWith('.csv')) {
+      const text = await file.text();
+      const lines = text.split('\n').filter(l => l.trim() !== '');
+      numRegistros = Math.max(0, lines.length - 1); // asumiendo 1 linea de header
+    } else if (file.name.endsWith('.xlsx') || file.name.endsWith('.xls')) {
+      const arrayBuffer = await file.arrayBuffer();
+      const workbook = xlsx.read(arrayBuffer, { type: 'buffer' });
+      const firstSheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[firstSheetName];
+      const json = xlsx.utils.sheet_to_json(worksheet);
+      numRegistros = json.length;
+    }
+    
+    // Simular espera de 2 segundos
     await new Promise(resolve => setTimeout(resolve, 2000));
     
     // Actualizar auditoría
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from('auditoria_cargas')
       .update({
         estado: 'exitoso',
@@ -98,12 +116,18 @@ async function simulateETLProcessing(file, auditId, userId) {
   } catch (err) {
     console.error('Error in simulateETLProcessing:', err);
     try {
-       const supabase = await createClient();
-       await supabase.from('auditoria_cargas').update({
+       const supabaseAdmin = createSupabaseClient(
+         process.env.NEXT_PUBLIC_SUPABASE_URL,
+         process.env.SUPABASE_SERVICE_ROLE_KEY,
+         { auth: { autoRefreshToken: false, persistSession: false } }
+       );
+       await supabaseAdmin.from('auditoria_cargas').update({
          estado: 'error',
          error_msg: String(err).substring(0, 500),
          fecha_fin: new Date().toISOString()
        }).eq('id', auditId);
-    } catch (e) {}
+    } catch (e) {
+       console.error('Fatal error updating audit error state:', e);
+    }
   }
 }

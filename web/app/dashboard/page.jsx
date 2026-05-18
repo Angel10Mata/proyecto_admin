@@ -65,14 +65,27 @@ export default function Dashboard() {
     }
   }
 
+  useEffect(() => {
+    let interval;
+    if (history.some(h => h.estado === 'procesando')) {
+      interval = setInterval(() => {
+        fetchHistory();
+      }, 2000);
+    }
+    return () => clearInterval(interval);
+  }, [history]);
+
   const handleFileChange = (e) => {
     const selected = e.target.files?.[0];
     if (selected) validateAndSet(selected);
   };
 
   const validateAndSet = (selected) => {
-    if (!selected.name.endsWith('.csv')) {
-      setResult({ success: false, message: 'Solo se permiten archivos .csv' });
+    const isCsv = selected.name.endsWith('.csv');
+    const isExcel = selected.name.endsWith('.xlsx') || selected.name.endsWith('.xls');
+    
+    if (!isCsv && !isExcel) {
+      setResult({ success: false, message: 'Solo se permiten archivos .csv, .xlsx o .xls' });
       return;
     }
     setFile(selected);
@@ -183,7 +196,7 @@ export default function Dashboard() {
           <div className="upload-section glass-card">
             <div className="section-header">
               <h3>CARGA DE DATOS</h3>
-              <p>Selecciona un archivo CSV para el proceso ETL</p>
+              <p>Selecciona un archivo CSV o Excel para el proceso ETL</p>
             </div>
 
             <div
@@ -196,14 +209,14 @@ export default function Dashboard() {
               <input
                 ref={fileRef}
                 type="file"
-                accept=".csv"
+                accept=".csv, .xlsx, .xls, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                 onChange={handleFileChange}
                 style={{ display: 'none' }}
               />
               
               <div className="dropzone-content">
                 <span className="upload-cloud-icon">📤</span>
-                <p>Arrastra tu archivo CSV aquí</p>
+                <p>Arrastra tu archivo CSV o Excel aquí</p>
                 <span className="browse-text">o haz clic para explorar</span>
               </div>
 
@@ -230,8 +243,8 @@ export default function Dashboard() {
 
             <div className="upload-metadata">
               <div className="meta-row">
-                <span>Formato</span>
-                <span className="meta-val">.csv</span>
+                <span>Formatos</span>
+                <span className="meta-val">.csv, .xlsx, .xls</span>
               </div>
               <div className="meta-row">
                 <span>Tamaño máx.</span>
