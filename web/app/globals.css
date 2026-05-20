@@ -1,36 +1,36 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
-  /* Color Palette - Premium Dark Mode */
-  --bg: #080a0f;
-  --surface: #121620;
-  --surface-hover: #1a1f2e;
-  --surface-glass: rgba(18, 22, 32, 0.7);
-  --border: rgba(255, 255, 255, 0.08);
-  --border-focus: rgba(0, 212, 255, 0.4);
+  /* Color Palette - AI & Innovation (Midnight Purple) */
+  --bg: #09090b;
+  --surface: #13121c;
+  --surface-hover: #1a192b;
+  --surface-glass: rgba(19, 18, 28, 0.7);
+  --border: rgba(139, 92, 246, 0.15);
+  --border-focus: rgba(168, 85, 247, 0.5);
   
-  --accent: #0072ff;
-  --accent-gradient: linear-gradient(135deg, #0072ff 0%, #0056cc 100%);
-  --accent-glow: rgba(0, 114, 255, 0.3);
+  --accent: #a855f7;
+  --accent-gradient: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+  --accent-glow: rgba(168, 85, 247, 0.4);
   
-  --success: #00f2a6;
-  --success-glow: rgba(0, 242, 166, 0.2);
-  --danger: #ff4d6d;
-  --danger-glow: rgba(255, 77, 109, 0.2);
-  --warning: #ffb800;
+  --success: #10b981;
+  --success-glow: rgba(16, 185, 129, 0.2);
+  --danger: #f43f5e;
+  --danger-glow: rgba(244, 63, 94, 0.2);
+  --warning: #f59e0b;
   
-  --text: #f0f2f5;
+  --text: #f8fafc;
   --text-muted: #94a3b8;
   
-  --font-sans: 'Outfit', sans-serif;
+  --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
   
-  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.5);
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.8);
   
   --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 18px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
 }
 
 *, *::before, *::after {

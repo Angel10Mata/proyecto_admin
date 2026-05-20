@@ -49,74 +49,83 @@ export default function Login() {
   };
 
   return (
-    <div className="login-wrapper">
-      <div className="login-card glass-card">
-        <div className="login-header">
-          <div className="login-logo-box">BI</div>
-          <h1>Bienvenido</h1>
-          <p>BI RETAIL — DATA SYSTEM</p>
+    <div className="login-wrapper animate-fade-in">
+      <div className="login-split">
+        <div className="login-image-side">
+          <div className="login-image-bg"></div>
+          <div className="login-image-overlay"></div>
         </div>
+        
+        <div className="login-form-side">
+          <div className="login-card">
+            <div className="login-header">
+              <div className="login-logo-box">BI</div>
+              <h1>Bienvenido</h1>
+              <p>BI RETAIL — DATA SYSTEM</p>
+            </div>
 
-        <form className="login-form" onSubmit={handleSubmit} noValidate>
-          <div className="form-group">
-            <label htmlFor="username">Usuario</label>
-            <div className="input-container">
-              <input
-                id="username"
-                name="username"
-                type="text"
-                value={credentials.username}
-                onChange={handleChange}
-                placeholder="Ingresa tu usuario"
-                autoComplete="username"
+            <form className="login-form" onSubmit={handleSubmit} noValidate>
+              <div className="form-group">
+                <label htmlFor="username">Usuario</label>
+                <div className="input-container">
+                  <input
+                    id="username"
+                    name="username"
+                    type="text"
+                    value={credentials.username}
+                    onChange={handleChange}
+                    placeholder="Ingresa tu usuario"
+                    autoComplete="username"
+                    disabled={loading}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="password">Contraseña</label>
+                <div className="input-container">
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    value={credentials.password}
+                    onChange={handleChange}
+                    placeholder="••••••••"
+                    autoComplete="current-password"
+                    disabled={loading}
+                    required
+                  />
+                </div>
+              </div>
+
+              {error && (
+                <div className="error-banner" role="alert">
+                  <span>⚠️</span>
+                  {error}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                className="btn-primary btn-login"
                 disabled={loading}
-                required
-              />
+              >
+                {loading ? (
+                  <>
+                    <div className="spinner" />
+                    <span>Verificando...</span>
+                  </>
+                ) : (
+                  'Entrar al Sistema'
+                )}
+              </button>
+            </form>
+
+            <div className="login-footer">
+              <span>Universidad Mariano Gálvez — ASI 2024</span>
             </div>
           </div>
-
-          <div className="form-group">
-            <label htmlFor="password">Contraseña</label>
-            <div className="input-container">
-              <input
-                id="password"
-                name="password"
-                type="password"
-                value={credentials.password}
-                onChange={handleChange}
-                placeholder="••••••••"
-                autoComplete="current-password"
-                disabled={loading}
-                required
-              />
-            </div>
-          </div>
-
-          {error && (
-            <div className="error-banner" role="alert">
-              <span>⚠️</span>
-              {error}
-            </div>
-          )}
-
-          <button
-            type="submit"
-            className="btn-primary btn-login"
-            disabled={loading}
-          >
-            {loading ? (
-              <>
-                <div className="spinner" />
-                <span>Verificando...</span>
-              </>
-            ) : (
-              'Entrar al Sistema'
-            )}
-          </button>
-        </form>
-
-        <div className="login-footer">
-          <span>Universidad Mariano Gálvez — ASI 2024</span>
         </div>
       </div>
     </div>

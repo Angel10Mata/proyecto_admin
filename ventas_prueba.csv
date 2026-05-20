@@ -1,0 +1,8 @@
+factura_id,sku,producto,categoria,precio,sucursal,ciudad,cantidad,fecha
+F-1001,SKU-A1,Laptop Pro 15,Electrónica,1200.00,Sucursal Norte,Ciudad de México,2,2026-05-20
+F-1002,SKU-B2,Monitor 27",Electrónica,300.00,Sucursal Sur,Monterrey,1,2026-05-20
+F-1003,SKU-C3,Teclado Mecánico,Accesorios,85.00,Sucursal Norte,Ciudad de México,3,2026-05-21
+F-1004,SKU-D4,Silla Gamer,Mobiliario,250.00,Sucursal Este,Guadalajara,1,2026-05-21
+F-1005,SKU-A1,Laptop Pro 15,Electrónica,1200.00,Sucursal Este,Guadalajara,1,2026-05-22
+F-1006,SKU-E5,Mouse Inalámbrico,Accesorios,45.00,Sucursal Sur,Monterrey,5,2026-05-22
+F-1007,SKU-F6,Producto Falso,Otros,0,,,,-50,FechaInvalida
